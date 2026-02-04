@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nano Banana Pro – Free AI Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Puter.js: free, no‑key AI image + video generation -->
+    <script src="https://js.puter.com/v2/"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #000 100%);
+            color: #e5e7eb;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 1200px;
+            padding: 16px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .logo span.brand {
+            background: linear-gradient(90deg, #facc15, #fb923c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .pill {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(22, 163, 74, 0.15);
+            border: 1px solid rgba(22, 163, 74, 0.6);
+            font-size: 0.75rem;
+            color: #bbf7d0;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+            gap: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            padding: 16px;
+        }
+
+        h2 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 80px;
+            resize: vertical;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            background: rgba(15, 23, 42, 0.9);
+            color: inherit;
+            font: inherit;
+            margin-bottom: 10px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        select, input[type="number"] {
+            width: 100%;
+            padding: 7px 9px;
+            border-radius: 8px;
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            background: rgba(15, 23, 42, 0.9);
+            color: inherit;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        select:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        button.primary {
+            width: 100%;
+            margin-top: 8px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #0f172a;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: transform 0.1s, box-shadow 0.1s, opacity 0.1s;
+        }
+
+        button.primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+        }
+
+        button.primary:disabled {
+            opacity: 0.6;
+            cursor: default;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .status {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #a5b4fc;
+            display: none;
+        }
+
+        .status.visible { display: flex; }
+
+        .spinner {
+            width: 14px;
+            height: 14px;
+            border-radius: 999px;
+            border: 2px solid rgba(148, 163, 184, 0.5);
+            border-top-color: #a5b4fc;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .tabs {
+            display: inline-flex;
+            background: rgba(15, 23, 42, 0.85);
+            border-radius: 999px;
+            padding: 3px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            margin-bottom: 12px;
+        }
+
+        .tab-btn {
+            padding: 5px 12px;
+            border-radius: 999px;
+            border: none;
+            background: transparent;
+            color: #9ca3af;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: #111827;
+            color: #e5e7eb;
+        }
+
+        /* Results */
+        .image-results {
+            display: grid;
+      
